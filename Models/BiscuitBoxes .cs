@@ -128,9 +128,9 @@ namespace OOP_Lab.Models
             return result;
         }
 
-        public void threadInputTest(int boxeEmount, int boxNum)
+       /* public void threadInputTest(int boxeEmount, int boxNum)
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }

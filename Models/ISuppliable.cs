@@ -19,9 +19,6 @@ namespace OOP_Lab.Models
 
         int getOrderPrice(); //за всю поставку со всеми в ней коробками
 
-        //void output(OutputStream out) throws IOException;
-        //void write(Writer out) throws IOException;
-
-        void threadInputTest(int boxeEmount, int boxNum);
+      
     }
 }
