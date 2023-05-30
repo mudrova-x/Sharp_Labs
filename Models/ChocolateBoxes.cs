@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,7 +83,7 @@ namespace OOP_Lab.Models
             }
 
             ChocolateBoxes box = (ChocolateBoxes)obj;
-
+            if (this.barsEmount.Length != box.barsEmount.Length) return false;
             for (int i = 0; i < this.barsEmount.Length; i++)
                 if (this.barsEmount[i] != box.barsEmount[i])
                     return false;
@@ -117,6 +118,26 @@ namespace OOP_Lab.Models
             for (int i = 0; i < barsEmount.Length; i++)
                 result += string.Format("\n В коробке № {0} - {1} плиток шоколада", (i + 1), barsEmount[i]);
             return result;
+        }
+
+        public void output(BinaryWriter bw)
+        {
+            bw.Write(producerName);
+            bw.Write(chokolateFlavour);
+            bw.Write(barPrice);
+            bw.Write(barsEmount.Length);
+            for (int i = 0; i < barsEmount.Length; i++)
+                bw.Write(barsEmount[i]);
+        }
+
+        public void write(StreamWriter sw)
+        {
+            sw.Write("\n" + producerName + " ");
+            sw.Write((chokolateFlavour.Contains(" ") ? chokolateFlavour.Replace(" ", "-") : chokolateFlavour) + " ");
+            sw.Write(barPrice + " ");
+            sw.Write(barsEmount.Length);
+            for (int i = 0; i < barsEmount.Length; i++)
+                sw.Write(" " + barsEmount[i]);
         }
 
         /*public void threadInputTest(int boxeEmount, int boxNum)

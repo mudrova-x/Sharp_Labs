@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,10 @@ namespace OOP_Lab.Models
 
         int getOrderPrice(); //за всю поставку со всеми в ней коробками
 
-      
+        void output(BinaryWriter bw);
+        void write(StreamWriter sw);
+
+
+
     }
 }

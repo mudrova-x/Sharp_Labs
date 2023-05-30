@@ -47,6 +47,7 @@
     <Compile Include="Models\ChocolateBoxes.cs" />
     <Compile Include="Models\ISuppliable.cs" />
     <Compile Include="Models\PriceException.cs" />
+    <Compile Include="Models\StreamHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

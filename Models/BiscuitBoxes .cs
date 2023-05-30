@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +93,7 @@ namespace OOP_Lab.Models
 
             BiscuitBoxes box = (BiscuitBoxes)obj;
 
+            if (this.boxesWeight.Length != box.boxesWeight.Length) return false;
             for (int i = 0; i < this.boxesWeight.Length; i++)
                 if (this.boxesWeight[i] != box.boxesWeight[i])
                     return false;
@@ -128,9 +130,30 @@ namespace OOP_Lab.Models
             return result;
         }
 
-       /* public void threadInputTest(int boxeEmount, int boxNum)
+        public void output(BinaryWriter bw)
         {
-            throw new NotImplementedException();
-        }*/
+
+            bw.Write(producerName);
+            bw.Write(biscuitFlavour);
+            bw.Write(gramsPrice);
+            bw.Write(boxesWeight.Length);
+            for (int i = 0; i < boxesWeight.Length; i++)
+                bw.Write(boxesWeight[i]);
+        }
+
+        public void write(StreamWriter sw)
+        {
+            sw.Write("\n" + producerName + " ");
+            sw.Write((biscuitFlavour.Contains(" ") ? biscuitFlavour.Replace(" ", "-") : biscuitFlavour) + " ");
+            sw.Write(gramsPrice + " ");
+            sw.Write(boxesWeight.Length);
+            for (int i = 0; i < boxesWeight.Length; i++)
+                sw.Write(" " + boxesWeight[i]);
+        }
+
+        /* public void threadInputTest(int boxeEmount, int boxNum)
+         {
+             throw new NotImplementedException();
+         }*/
     }
 }

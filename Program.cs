@@ -1,10 +1,11 @@
 ﻿using OOP_Lab.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml.Schema;
 
 namespace OOP_Lab
 {
@@ -17,7 +18,7 @@ namespace OOP_Lab
             Console.WriteLine("Внести данные о поставках вручную или заполнить автомтически? (0/1)");
             int variant = Convert.ToUInt16(Console.ReadLine());
 
-            int shipmentsEmount = variant == 0 ? 1 : 5;
+            int shipmentsEmount = variant == 0 ? 1 : 6;
             if (variant == 0 )
             {
                 Console.WriteLine("Введите количество поставок:");
@@ -39,6 +40,7 @@ namespace OOP_Lab
                     shipments[2] = new ChocolateBoxes("C3", "Финики", new int[] { 9, 8, 9, 8, 5 }, 50);
                     shipments[3] = new ChocolateBoxes("C4", "Лесные орехи", new int[] { 3, 3 }, 325);
                     shipments[4] = new ChocolateBoxes("C5", "Морская соль", new int[] { 4, 7, 8, 6 }, 98);
+                    shipments[5] = new ChocolateBoxes("C5", "Морская соль", new int[] { 4, 7, 8, 6 }, 98);
                 }
                 else
                 {
@@ -47,6 +49,7 @@ namespace OOP_Lab
                     shipments[2] = new BiscuitBoxes("B3", "Имбирь", new int[] { 200, 150, 300 }, 300);
                     shipments[3] = new BiscuitBoxes("B4", "Кокос", new int[] { 90, 90, 90, 120, 80 }, 100);
                     shipments[4] = new BiscuitBoxes("B5", "Изюм", new int[] { 100, 100 }, 300);
+                    shipments[5] = new BiscuitBoxes("B5", "Изюм", new int[] { 100, 100 }, 300);
                 }
             }
             else
@@ -70,7 +73,18 @@ namespace OOP_Lab
                         }
                         Console.WriteLine("Введите цену за 100 грамм (кратную 100):");
                         int gramPrice = Convert.ToUInt16(Console.ReadLine());
-                        shipments[i] = new BiscuitBoxes(producerName, flavour, boxesWeight, gramPrice);
+                        try { 
+                            shipments[i] = new BiscuitBoxes(producerName, flavour, boxesWeight, gramPrice); 
+                        }catch(PriceException e)
+                        {
+                            Console.WriteLine("PriceException: " + e.Message);
+                            Console.ReadLine();
+                            return;
+                        }catch(Exception e) { 
+                            Console.WriteLine("Error: " + e.Message);
+                            Console.ReadLine();
+                            return;
+                        }
                     }
                     if (type == 2)
                     {
@@ -95,6 +109,8 @@ namespace OOP_Lab
                 Console.WriteLine("\nВыберите пункт меню:");
                 Console.WriteLine("1 - Просмотр списка поставок");
                 Console.WriteLine("2 - Поиск дубликатов в списке.");
+                Console.WriteLine("3 - Запись и чтение из файла (StreamWriter/StreamReader).");
+                Console.WriteLine("4 - Запись и чтение из бинарного файла (BinaryWriter/BinaryReader).");
                 //
                 Console.WriteLine("9 - Выход.");
                 variant = Convert.ToUInt16(Console.ReadLine());
@@ -119,10 +135,58 @@ namespace OOP_Lab
                                 if (sameList.ToList().Count() == 1)
                                     Console.WriteLine("Дубликатов нет");
                                 else
-                                    Console.WriteLine("Дубликатов: {0}", sameList.ToList().Count()-1);
+                                { 
+                                    Console.WriteLine("Дубликатов: {0}", sameList.ToList().Count() - 1); 
+                                    foreach (var sh in sameList)
+                                        Console.WriteLine("HashCode: " + sh.GetHashCode());
+                                }
+
                             }
                             else Console.WriteLine("Ошибка ввода номера");
                             break;
+                        }
+
+                    case (3):
+                        {
+                            using (var sw = new StreamWriter("shipments.txt", false, Encoding.UTF8))
+                            {
+                                foreach (var sh in shipments)
+                                    StreamHelper.writeISuppliable(sh, sw);
+                            }
+
+                            using (var sr = new StreamReader("shipments.txt", Encoding.UTF8))
+                            {
+                                Console.WriteLine("Информация из файла shipments.txt:\n" + new string('-', 24));
+                                sr.ReadLine();
+                                for (int i=0; i<shipments.Length; i++)
+                                {
+                                    ISuppliable s = StreamHelper.readISuppliable(sr);
+                                    Console.WriteLine(s.ToString());
+                                }
+                            }
+                            break;
+
+                        }
+
+                    case (4):
+                        {
+                            using (var bw = new BinaryWriter(File.Open("shipments.dat", FileMode.OpenOrCreate)))
+                            {
+                                foreach (var sh in shipments)
+                                    StreamHelper.outputISuppliable(sh, bw);
+                            }
+
+                            using (var br = new BinaryReader(File.Open("shipments.dat", FileMode.Open)))
+                            {
+                                Console.WriteLine("Информация из файла shipments.dat:\n" + new string('-', 24));
+                                for (int i = 0; i < shipments.Length; i++)
+                                {
+                                    ISuppliable s = StreamHelper.inputISuppliable(br);
+                                    Console.WriteLine(s.ToString());
+                                }
+                            }
+                            break;
+
                         }
 
                     case (9):
